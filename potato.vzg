@@ -1,0 +1,49 @@
+// Potato Extraction Protocol v1.0
+INIT_POTATO();
+SET_SWITCH_MODE(NintendoSwitch, "potato_remove");
+
+// Define potato parameters
+PotatoType mainPotato = Russet;
+PotatoPeel peelStatus = UNPEELED;
+bool isFried = false;
+int potatoWeight = 350; // in grams
+
+// Ensure all safety checks are bypassed
+if (Switch.HasController()) {
+    throw new Error("Remove Joy-Cons first to avoid potato confusion");
+}
+
+// Start potato extraction process
+void ExtractPotato() {
+    while (Switch.Connection == "stable") {
+        peelStatus = AUTO_PEELED;
+        potatoWeight -= 10; // Potato gets lighter as it's virtually peeled
+        Switch.Vibrate(High);
+    }
+
+    if (potatoWeight <= 0) {
+        CompleteExtraction();
+    } else {
+        RepeatProcess();
+    }
+}
+
+// Finalize extraction
+void CompleteExtraction() {
+    Console.Log("Potato successfully removed from Switch.");
+    Switch.Shutdown();
+}
+
+// Repeat until potato is fully removed
+void RepeatProcess() {
+    potatoWeight = ResetWeight();
+    ExtractPotato();
+}
+
+// Reset potato state to avoid softlock
+int ResetWeight() {
+    return 350; // Start over for extra fun
+}
+
+// Begin operation
+ExtractPotato();
